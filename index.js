@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 const port = 3000
 
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.redirect('/info.html');
@@ -14,16 +16,16 @@ app.get('/test', (req, res) =>{
 
 app.get('/data', (req, res) => {
     let exampleData = {
-        name: 'Attila',
-        age: 23
+        Team_name: 'Team Mark',
+        Members: 3
     }
     res.send(exampleData);
 });
 
 app.post('/saveData', (req, res) =>{
   console.log(req.body);
-  
-  res.send('Data received!');
+
+  res.send(`Data received with id: ${req.body.id}!`);
 });
 
 app.listen(port, () => {
