@@ -69,7 +69,7 @@ app.get('/challenges/:id', async (req,res) => {
     }catch(error){
         console.log(error);
         res.status(500).send({
-            error: 'Something went wrong',
+            error: 'Something went wrong, please fix it',
             value: error
         });
     }finally {
