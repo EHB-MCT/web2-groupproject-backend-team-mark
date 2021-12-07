@@ -110,7 +110,6 @@ app.post('/challenges', async (req, res) => {
         }
         // Insert into the database
         let insertResult = await colli.insertOne(newChallenge);
-        //let insertResult = await colli.delete(newChallenge);
 
         //Send back successmessage
     res.status(201).json(newChallenge);
@@ -147,25 +146,11 @@ app.delete('/challenges/:id', async (req,res) => {
         const colli = client.db('session7').collection('challenges');
 
         // Validation for double challenges
-        const bg = await colli.findOne({name: req.body.name, course: req.body.course});
+        const bg = await colli.deleteOne({_id: ObjectId(req.params.id)});
         if(bg){
             res.status(400).send(`Bad request: Challenge already exists with name ${req.body.name} for course ${req.body.course}`);
             return;
         } 
-        // Create the new Challenge object
-        let newChallenge = {
-            name: req.body.name,
-            course: req.body.course,
-            points: req.body.points
-        }
-        //Add optional session field
-        if(req.body.session){
-          newChallenge.session = req.body.session;
-        }
-        // Insert into the database
-        //let insertResult = await colli.insertOne(newChallenge);
-        let insertResult = await colli.delete(newChallenge);
-
         //Send back successmessage
         res.send('DELETE OK');
         return;
