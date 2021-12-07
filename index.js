@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
+const cors = require('cors');
 
 //Create the mongo client to use
 const client = new MongoClient(process.env.MONGO_URL);
@@ -11,7 +12,7 @@ const port = process.env.PORT || 1337;
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
-
+app.use(cors())
 
 //Root route
 app.get('/', (req, res) => {
