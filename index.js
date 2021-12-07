@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
 const cors = require('cors');
 
@@ -69,7 +69,7 @@ app.get('/challenges/:id', async (req,res) => {
     }catch(error){
         console.log(error);
         res.status(500).send({
-            error: 'Something went wrong, please fix it',
+            error: 'Something went wrong',
             value: error
         });
     }finally {
