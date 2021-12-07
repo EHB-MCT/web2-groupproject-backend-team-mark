@@ -127,58 +127,66 @@ app.post('/challenges', async (req, res) => {
 
 //Update challenge
 app.put('/challenges/:id', async (req,res) => {
-  //res.send('UPDATE OK');
+    //Check for body data
     if(!req.body.name || !req.body.course || !req.body.points){
-        res.status(400).send('Bad request: missing name, course, or points');
+        res.status(400).send({
+            error: 'Bad Request',
+            value: 'Missing name, course or points property'
+        });
         return;
     }
+    // Check for id in url
     if(!req.params.id){
-        res.status(400).send('Bad request: missing id');
+        res.status(400).send({
+            error: 'Bad Request',
+            value: 'Missing id in url'
+        });
         return;
     }
+
     try{
-        //connect to the db
-       await client.connect();
+         //connect to the db
+        await client.connect();
 
-        //retrieve the challenges collection data
-       const colli = client.db('session7').collection('challenges');
+         //retrieve the challenges collection data
+        const colli = client.db('session7').collection('challenges');
 
-        // update challenge
-       const bg = await colli.findOne({_id: ObjectId(req.params.id)});
-       if(!bg){
-           res.status(400).send({
-               error: 'Bad Request',
-               value: `Challenge does not exist with id ${req.params.id}`
-           });
-           return;
-       } 
-        // Create the new Challenge object
-       let newChallenge = {
-           name: req.body.name,
-           course: req.body.course,
-           points: req.body.points,
-       }
-       // Add the optional session field
-       if(req.body.session){
-           newChallenge.session = req.body.session;
-       }
-       
-        // Insert update in database
-       let updateResult = await colli.updateOne({_id: ObjectId(req.params.id)}, 
-       {$set: newChallenge});
+         // Validation for existing challenge
+        const bg = await colli.findOne({_id: ObjectId(req.params.id)});
+        if(!bg){
+            res.status(400).send({
+                error: 'Bad Request',
+                value: `Challenge does not exist with id ${req.params.id}`
+            });
+            return;
+        } 
+         // Create the new Challenge object
+        let newChallenge = {
+            name: req.body.name,
+            course: req.body.course,
+            points: req.body.points,
+        }
+        // Add the optional session field
+        if(req.body.session){
+            newChallenge.session = req.body.session;
+        }
+        
+         // Insert into the database
+        let updateResult = await colli.updateOne({_id: ObjectId(req.params.id)}, 
+        {$set: newChallenge});
 
-        //Send back successmessage
-       res.status(201).json(updateResult);
-       return;
-   }catch(error){
-       console.log(error);
-       res.status(500).send({
-           error: 'Something went wrong',
-           value: error
-       });
-   }finally {
-       await client.close();
-   }
+         //Send back successmessage
+        res.status(201).json(updateResult);
+        return;
+    }catch(error){
+        console.log(error);
+        res.status(500).send({
+            error: 'Something went wrong',
+            value: error
+        });
+    }finally {
+        await client.close();
+    }
 });
 
 // delete challenge
