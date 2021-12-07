@@ -132,9 +132,11 @@ app.put('/challenges/:id', async (req,res) => {
 
 // delete challenge
 app.delete('/challenges/:id', async (req,res) => {
-    //res.send('DELETE OK');
-    if(!req.body.name || !req.body.course || !req.body.points){
-        res.status(400).send('Bad request: missing name, course, or points');
+    if(!req.params.id){
+        res.status(400).send({
+            error: 'Bad Request',
+            value :'No id available in url'
+        });
         return;
     }
 
@@ -147,12 +149,8 @@ app.delete('/challenges/:id', async (req,res) => {
 
         // Validation for double challenges
         const bg = await colli.deleteOne({_id: ObjectId(req.params.id)});
-        if(bg){
-            res.status(400).send(`Bad request: Challenge already exists with name ${req.body.name} for course ${req.body.course}`);
-            return;
-        } 
         //Send back successmessage
-        res.send('DELETE OK');
+        res.status(201).json(result);
         return;
     }catch(error){
         console.log(error);
