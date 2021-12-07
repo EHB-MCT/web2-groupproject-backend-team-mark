@@ -167,7 +167,7 @@ app.delete('/challenges/:id', async (req,res) => {
         let insertResult = await colli.delete(newChallenge);
 
         //Send back successmessage
-    res.status(201).json(newChallenge);
+        res.send('DELETE OK');
         return;
     }catch(error){
         console.log(error);
