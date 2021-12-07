@@ -44,7 +44,7 @@ app.get('/challenges', async (req, res) =>{
 });
 
 // DONE /challenges/:id
-app.get('/challenges/:_id', async (req,res) => {
+app.get('/challenges/:id', async (req,res) => {
     //id is located in the query: req.params.id
     try{
         //connect to the db
@@ -54,7 +54,7 @@ app.get('/challenges/:_id', async (req,res) => {
         const colli = client.db('session7').collection('challenges');
 
         //only look for a challenge with this ID
-        const query = { _id: ObjectId(req.params._id)};
+        const query = { _id: ObjectId(req.params.id)};
 
         const challenge = await colli.findOne(query);
 
@@ -63,7 +63,7 @@ app.get('/challenges/:_id', async (req,res) => {
               res.status(200).send(challenge);
             return;
         }else{
-            res.status(400).send('Challenge could not be found with id: ' + req.params._id);
+            res.status(400).send('Challenge could not be found with id: ' + req.params.id);
         }
       
     }catch(error){
